@@ -318,10 +318,3 @@ Lint TypeScript files
 
 Author: Gajanan Vilas Bhange
 
-🆘 Support
-
-For issues and questions:
-
-Check existing documentation
-Review example tests
-Create issue in repository
