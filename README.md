@@ -24,6 +24,10 @@ A comprehensive TypeScript-based automation framework using Playwright for robus
 
 text
 
+
+
+
+
 playwright_training/
 ├── 📂 pages/                          # Page Object Model
 │   ├── basePage.ts                    # Base page class
@@ -42,6 +46,8 @@ playwright_training/
 ├── package.json                       # Dependencies & scripts
 └── tsconfig.json                      # TypeScript config
 
+
+
 🚀 Quick Start
 
 Prerequisites
@@ -56,20 +62,38 @@ Clone and setup
 
 bash
 
+
+
+
+
 git clone <repository-url>cd playwright_trainingnpm installnpx playwright install
+
+
 
 Environment setup
 
 bash
 
+
+
+
+
 cp .env.example .env# Configure your environment variables
+
+
 
 Run tests
 
 bash
 
+
+
+
+
 # Run all testsnpm test# Run smoke testsnpm run test:smoke
 # Run with UInpm run test:smoke:headed
+
+
 
 🧪 Test Execution
 
@@ -77,22 +101,40 @@ Run Specific Test Types
 
 bash
 
+
+
+
+
 # BDD Tests with Cucumbernpm run test:bdd
 # Regression testsnpm run test:regression
 # Debug modenpm run test:smoke:debug
 # Specific tag (@p1)npm run test:p1
 
+
+
 Database Tests
 
 bash
 
+
+
+
+
 # Run database integration testsnpm run test:regression
+
+
 
 Visual Tests
 
 bash
 
+
+
+
+
 # Run tests with visual validationnpm run test:smoke:headed
+
+
 
 📊 Reporting
 
@@ -100,19 +142,37 @@ Allure Reports
 
 bash
 
+
+
+
+
 # Generate and view Allure reportnpm run test:allure report# ornpm run allure:open
+
+
 
 Playwright Reports
 
 bash
 
+
+
+
+
 # View HTML reportnpm run test:report
+
+
 
 Clean Reports
 
 bash
 
+
+
+
+
 # Remove previous test artifactsnpm run test:report:clean
+
+
 
 🔧 Configuration
 
@@ -121,6 +181,10 @@ Environment Variables
 Create .env file:
 
 env
+
+
+
+
 
 # Database
 DB_HOST=localhost
@@ -138,6 +202,8 @@ HEADLESS=true
 TIMEOUT=30000
 SLOW_MO=100
 
+
+
 Playwright Config
 
 Key settings in playwright.config.ts:
@@ -153,14 +219,26 @@ Code Quality
 
 bash
 
+
+
+
+
 # Lint TypeScript filesnpm run code:lint
+
+
 
 Project Maintenance
 
 bash
 
+
+
+
+
 # Clean installationnpm run clean:install
 # Remove test artifactsnpm run clean
+
+
 
 🧩 Test Types
 
@@ -204,6 +282,8 @@ Use conventional commit messages
 
 📝 Scripts Overview
 
+
+
 Command
 
 Description
@@ -238,10 +318,3 @@ Lint TypeScript files
 
 Author: Gajanan Vilas Bhange
 
-🆘 Support
-
-For issues and questions:
-
-Check existing documentation
-Review example tests
-Create issue in repository
