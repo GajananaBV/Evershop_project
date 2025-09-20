@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playwright Locator Playground - Training</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ----- Global Variables ----- */
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --accent: #4cc9f0;
+      --success: #4ade80;
+      --warning: #f9c74f;
+      --danger: #f87171;
+      --danger-dark: #e05d5d;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-500: #64748b;
+      --gray-700: #334155;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    /* ----- Reset & Base ----- */
+    * { 
+      box-sizing: border-box; 
+      margin: 0;
+      padding: 0;
+    }
+
+    body { 
+      font-family: 'Inter', system-ui, Arial, sans-serif; 
+      background: linear-gradient(135deg, #f3f6f9 0%, #e9edf2 100%);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    a { 
+      color: var(--primary); 
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    a:hover { 
+      color: var(--secondary); 
+      text-decoration: underline;
+    }
+
+    /* ----- Layout ----- */
+    .container { 
+      max-width: 1400px; 
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 16px; 
+      margin-bottom: 24px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    header h1 { 
+      margin: 0; 
+      font-size: 28px; 
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .grid { 
+      display: grid; 
+      grid-template-columns: 360px 1fr; 
+      gap: 24px; 
+    }
+
+    /* ----- Card / Panel ----- */
+    .card { 
+      background: white; 
+      border-radius: 16px; 
+      padding: 24px; 
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--gray-200);
+      transition: var(--transition);
+    }
+    .card:hover {
+      box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h2 { 
+      margin: 0 0 16px 0; 
+      font-size: 20px; 
+      color: var(--dark);
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    .card h2:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    /* ----- Form & Controls ----- */
+    .field { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px; 
+      margin-bottom: 16px; 
+    }
+
+    label { 
+      font-size: 14px; 
+      color: var(--gray-700);
+      font-weight: 500;
+    }
+
+    input[type="text"], input[type="email"], input[type="number"], select, textarea {
+      padding: 12px 14px; 
+      border-radius: 8px; 
+      border: 1px solid var(--gray-300); 
+      font-size: 15px; 
+      width: 100%;
+      transition: var(--transition);
+      background: var(--light);
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    input[type="file"] { 
+      font-size: 14px; 
+      padding: 10px 0;
+    }
+
+    .row { 
+      display: flex; 
+      gap: 10px; 
+      align-items: center; 
+    }
+
+    .btn { 
+      padding: 12px 18px; 
+      border-radius: 8px; 
+      border: none; 
+      cursor: pointer; 
+      font-weight: 600; 
+      font-size: 15px; 
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn i { font-size: 18px; }
+
+    .btn-primary { 
+      background: var(--primary); 
+      color: white; 
+      box-shadow: 0 4px 6px rgba(67, 97, 238, 0.3);
+    }
+    .btn-primary:hover { 
+      background: var(--primary-dark); 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(67, 97, 238, 0.4);
+    }
+
+    .btn-ghost { 
+      background: transparent; 
+      border: 1px solid var(--gray-300); 
+      color: var(--gray-700);
+    }
+    .btn-ghost:hover { 
+      background: var(--gray-100); 
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-danger { 
+      background: var(--danger); 
+      color: white; 
+      box-shadow: 0 4px 6px rgba(248, 113, 113, 0.3);
+    }
+    .btn-danger:hover { 
+      background: var(--danger-dark); 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(248, 113, 113, 0.4);
+    }
+
+    .muted { 
+      color: var(--gray-500); 
+      font-size: 14px; 
+    }
+
+    /* ----- Table ----- */
+    table { 
+      width: 100%; 
+      border-collapse: separate; 
+      border-spacing: 0;
+      font-size: 15px; 
+      border-radius: 12px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    th, td { 
+      padding: 14px 16px; 
+      text-align: left; 
+      vertical-align: middle; 
+    }
+
+    thead th { 
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    tbody tr { transition: var(--transition); }
+    tbody tr:hover { background: rgba(67, 97, 238, 0.05) !important; }
+
+    tbody tr:nth-child(odd) td { background: #ffffff; }
+    tbody tr:nth-child(even) td { background: var(--light); }
+
+    .action-btn { 
+      margin-right: 8px; 
+      padding: 8px 12px; 
+      border-radius: 8px; 
+      font-size: 14px; 
+    }
+
+    /* ----- Utility UI ----- */
+    .small { 
+      font-size: 14px; 
+      padding: 8px 12px; 
+    }
+
+    .sr-only { 
+      position: absolute !important; 
+      height: 1px; 
+      width: 1px; 
+      overflow: hidden; 
+      clip: rect(1px, 1px, 1px, 1px); 
+      white-space: nowrap; 
+    }
+
+    .hidden { display: none !important; }
+
+    .badge { 
+      display: inline-flex; 
+      padding: 6px 14px; 
+      border-radius: 50px; 
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white; 
+      font-weight: 600; 
+      font-size: 13px; 
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preview { 
+      margin-top: 10px; 
+      font-size: 14px; 
+      color: var(--gray-700);
+      padding: 10px;
+      background: var(--light);
+      border-radius: 8px;
+      border: 1px dashed var(--gray-300);
+    }
+
+    /* ----- Hover / Focus States ----- */
+    .hover-target { 
+      display: inline-block; 
+      padding: 12px 16px; 
+      background: #fff9db; 
+      border: 1px solid var(--warning); 
+      border-radius: 8px; 
+      cursor: default; 
+      transition: var(--transition);
+      font-weight: 500;
+    }
+    .hover-target:hover { 
+      background: #fff3bf; 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(249, 199, 79, 0.2);
+    }
+
+    .focusable { 
+      outline: none; 
+      padding: 10px 14px; 
+      border-radius: 8px; 
+      border: 1px solid var(--gray-300); 
+      transition: var(--transition);
+    }
+    .focusable:focus { 
+      box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.25); 
+      border-color: var(--primary);
+    }
+
+    /* ----- Modal ----- */
+    .modal-backdrop { 
+      position: fixed; 
+      inset: 0; 
+      background: rgba(2, 6, 23, 0.65); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      z-index: 100; 
+      backdrop-filter: blur(4px);
+    }
+
+    .modal { 
+      width: 450px; 
+      background: white; 
+      border-radius: 16px; 
+      padding: 24px; 
+      box-shadow: 0 20px 40px rgba(2, 6, 23, 0.4); 
+      animation: modalIn 0.3s ease-out;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal h3 { 
+      margin: 0 0 12px 0; 
+      font-size: 22px; 
+      color: var(--dark);
+    }
+
+    .modal .actions { 
+      display: flex; 
+      gap: 12px; 
+      justify-content: flex-end; 
+      margin-top: 20px; 
+    }
+
+    /* ----- Shadow Host ----- */
+    #shadow-host { 
+      border-radius: 12px; 
+      padding: 16px; 
+      background: var(--light); 
+      border: 1px solid var(--gray-200); 
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* ----- Tabs ----- */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray-200);
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 12px 20px;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--gray-500);
+      position: relative;
+      transition: var(--transition);
+    }
+    .tab.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .tab.active:after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px 3px 0 0;
+    }
+    .tab:hover:not(.active) {
+      color: var(--primary);
+      background: rgba(67, 97, 238, 0.05);
+    }
+
+    /* ----- Progress & Meter ----- */
+    progress, meter {
+      width: 100%;
+      height: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--gray-300);
+      overflow: hidden;
+    }
+    progress::-webkit-progress-bar {
+      background: var(--light);
+    }
+    progress::-webkit-progress-value {
+      background: var(--primary);
+      border-radius: 6px;
+    }
+    meter::-webkit-meter-bar {
+      background: var(--light);
+    }
+    meter::-webkit-meter-optimum-value {
+      background: var(--success);
+      border-radius: 6px;
+    }
+
+    /* ----- Responsive ----- */
+    @media (max-width: 980px) { 
+      .grid { 
+        grid-template-columns: 1fr; 
+      } 
+      header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 12px; 
+      } 
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .card { padding: 20px; }
+      .btn { padding: 10px 14px; }
+    }
+
+    /* ----- Animations ----- */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+<div class="container fade-in">
+  <header>
+    <div>
+      <h1>Playwright Locator Playground</h1>
+      <div class="muted">Interactive training sandbox for mastering locators & interactions</div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center">
+      <button class="btn btn-primary" id="downloadDemo" data-testid="nav-download">
+        <i>⬇️</i> Download Demo
+      </button>
+      <a id="playwrightLink" class="btn btn-ghost" data-testid="top-playwright-link" target="_blank" href="https://playwright.dev">
+        <i>📚</i> Playwright Docs
+      </a>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="students">Students</div>
+    <div class="tab" data-tab="interactions">Interactions</div>
+    <div class="tab" data-tab="advanced">Advanced</div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: Controls / Add Student / Filters -->
+    <aside class="card" aria-labelledby="controls-title">
+      <h2 id="controls-title">Controls & Add Student</h2>
+
+      <div class="field">
+        <label for="searchInput">Search students (by name)</label>
+        <input id="searchInput" placeholder="Type to filter names..." class="focusable" data-testid="search-input">
+      </div>
+
+      <form id="addForm" class="field" aria-labelledby="addTitle" data-testid="add-form">
+        <h3 id="addTitle" style="margin:0 0 12px 0; font-size:18px;">Add / Quick Create</h3>
+
+        <label for="nameInput">Name</label>
+        <input id="nameInput" value="Gajanan" required data-testid="input-name">
+
+        <label for="emailInput">Email</label>
+        <input id="emailInput" type="email" placeholder="gajanan@example.com" data-testid="input-email">
+
+        <label for="courseInput">Course</label>
+        <input id="courseInput" list="courses" placeholder="Choose course..." data-testid="input-course">
+        <datalist id="courses">
+          <option value="Playwright"></option>
+          <option value="Selenium"></option>
+          <option value="Cypress"></option>
+          <option value="Manual Testing"></option>
+          <option value="API Testing"></option>
+          <option value="Performance Testing"></option>
+        </datalist>
+
+        <div class="row" style="align-items:center">
+          <div style="flex:1">
+            <label for="rating">Rating</label>
+            <input id="rating" type="range" min="1" max="5" value="4" data-testid="input-range">
+            <div class="muted">Value: <span id="ratingValue">4</span></div>
+          </div>
+        </div>
+
+        <label for="photoUpload">Photo (file)</label>
+        <input id="photoUpload" type="file" data-testid="input-file" accept="image/*">
+        <div id="photoPreview" class="preview muted">No file chosen</div>
+
+        <label for="colorInput">Favorite color</label>
+        <input id="colorInput" type="color" value="#4361ee" data-testid="input-color">
+
+        <div style="display:flex; gap:12px; margin-top:16px;">
+          <button type="submit" class="btn btn-primary" id="addBtn" data-testid="btn-add">
+            <i>➕</i> Add Student
+          </button>
+          <button type="button" class="btn btn-ghost" id="clearForm" data-testid="btn-clear">
+            <i>🗑️</i> Clear
+          </button>
+        </div>
+      </form>
+
+      <hr style="margin:16px 0; border-color: var(--gray-200);">
+
+      <div class="row" style="justify-content:space-between; align-items:center;">
+        <div>
+          <button id="exportCSVBtn" class="btn small btn-ghost" data-testid="btn-export">
+            <i>📊</i> Export CSV
+          </button>
+          <button id="bulkDeleteBtn" class="btn small btn-danger" data-testid="btn-bulk-delete">
+            <i>❌</i> Delete Selected
+          </button>
+        </div>
+        <div class="muted">Total: <span id="totalCount">3</span></div>
+      </div>
+
+      <hr style="margin:16px 0; border-color: var(--gray-200);">
+
+      <div>
+        <h3 style="margin:0 0 12px 0; font-size:18px;">Interaction Examples</h3>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button id="nativeAlert" class="btn btn-ghost" data-testid="btn-alert">
+            <i>⚠️</i> Show native alert
+          </button>
+          <button id="nativeConfirm" class="btn btn-ghost" data-testid="btn-confirm">
+            <i>❓</i> Show native confirm
+          </button>
+          <button id="customModalOpen" class="btn btn-primary" data-testid="btn-open-modal">
+            <i>🔲</i> Open accessible modal
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT: Main content -->
+    <main>
+      <!-- Toolbar -->
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h2 style="margin:0">Student Management</h2>
+            <div class="muted">Practice locating table rows, cells, actions, selection and exports</div>
+          </div>
+          <div style="display:flex; gap:12px; align-items:center;">
+            <button id="addSampleBtn" class="btn btn-ghost" data-testid="btn-add-sample">
+              <i>➕</i> Add Sample
+            </button>
+            <div class="badge" data-testid="badge-live">
+              <i>✨</i> Live demo
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table card -->
+      <section class="card" aria-labelledby="tableTitle">
+        <h2 id="tableTitle">Targaryen Team Table</h2>
+        <table id="studentTable" data-testid="student-table" aria-describedby="tableDesc">
+          <caption id="tableDesc" class="sr-only">Interactive student data table for training</caption>
+          <thead>
+            <tr>
+              <th style="width:40px"><input id="selectAll" type="checkbox" aria-label="Select all"></th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Course</th>
+              <th>Rating</th>
+              <th style="width:180px">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-id="1">
+              <td><input class="rowCheck" type="checkbox" data-testid="row-checkbox-1"></td>
+              <td class="cell-id">1</td>
+              <td class="cell-name" data-testid="name-1">Gajanan</td>
+              <td class="cell-email">gajanan@example.com</td>
+              <td class="cell-course">Playwright</td>
+              <td class="cell-rating">4</td>
+              <td>
+                <button class="action-btn btn-ghost editBtn" data-testid="edit-1">
+                  <i>✏️</i> Edit
+                </button>
+                <button class="action-btn btn-danger deleteBtn" data-testid="delete-1">
+                  <i>🗑️</i> Delete
+                </button>
+              </td>
+            </tr>
+
+            <tr data-id="2">
+              <td><input class="rowCheck" type="checkbox" data-testid="row-checkbox-2"></td>
+              <td class="cell-id">2</td>
+              <td class="cell-name">Ajith_Nsp</td>
+              <td class="cell-email">Ajith_Nsp@example.com</td>
+              <td class="cell-course">Selenium</td>
+              <td class="cell-rating">3</td>
+              <td>
+                <button class="action-btn btn-ghost editBtn" data-testid="edit-2">
+                  <i>✏️</i> Edit
+                </button>
+                <button class="action-btn btn-danger deleteBtn" data-testid="delete-2">
+                  <i>🗑️</i> Delete
+                </button>
+              </td>
+            </tr>
+
+            <tr data-id="3">
+              <td><input class="rowCheck" type="checkbox" data-testid="row-checkbox-3"></td>
+              <td class="cell-id">3</td>
+              <td class="cell-name">Pavithra</td>
+              <td class="cell-email">pavithra@example.com</td>
+              <td class="cell-course">Cypress</td>
+              <td class="cell-rating">5</td>
+              <td>
+                <button class="action-btn btn-ghost editBtn" data-testid="edit-3">
+                  <i>✏️</i> Edit
+                </button>
+                <button class="action-btn btn-danger deleteBtn" data-testid="delete-3">
+                  <i>🗑️</i> Delete
+                </button>
+              </td>
+            </tr>
+            <tr data-id="4">
+              <td><input class="rowCheck" type="checkbox" data-testid="row-checkbox-4"></td>
+              <td class="cell-id">4</td>
+              <td class="cell-name">Sangeetha</td>
+              <td class="cell-email">Sangeetha@example.com</td>
+              <td class="cell-course">Selenium</td>
+              <td class="cell-rating">6</td>
+              <td>
+                <button class="action-btn btn-ghost editBtn" data-testid="edit-4">
+                  <i>✏️</i> Edit
+                </button>
+                <button class="action-btn btn-danger deleteBtn" data-testid="delete-4">
+                  <i>🗑️</i> Delete
+                </button>
+              </td>
+            </tr>
+            <tr data-id="5">
+              <td><input class="rowCheck" type="checkbox" data-testid="row-checkbox-5"></td>
+              <td class="cell-id">5</td>
+              <td class="cell-name">Arunprakash</td>
+              <td class="cell-email">Arunprakash@example.com</td>
+              <td class="cell-course">Selenium</td>
+              <td class="cell-rating">7</td>
+              <td>
+                <button class="action-btn btn-ghost editBtn" data-testid="edit-5">
+                  <i>✏️</i> Edit
+                </button>
+                <button class="action-btn btn-danger deleteBtn" data-testid="delete-5">
+                  <i>🗑️</i> Delete
+                </button>
+              </td>
+            </tr>
+            <tr data-id="6">
+              <td><input class="rowCheck" type="checkbox" data-testid="row-checkbox-6"></td>
+              <td class="cell-id">6</td>
+              <td class="cell-name">abinath</td>
+              <td class="cell-email">abinath@example.com</td>
+              <td class="cell-course">Selenium</td>
+              <td class="cell-rating">7</td>
+              <td>
+                <button class="action-btn btn-ghost editBtn" data-testid="edit-6">
+                  <i>✏️</i> Edit
+                </button>
+                <button class="action-btn btn-danger deleteBtn" data-testid="delete-6">
+                  <i>🗑️</i> Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- collapsible details area (toggle per row) -->
+        <div id="rowDetails" class="hidden" style="margin-top:16px; padding:16px; background: var(--light); border-radius:8px;" data-testid="row-details"></div>
+      </section>
+
+      <!-- Iframe / Shadow / Media / Events -->
+      <section class="card" aria-labelledby="extrasTitle">
+        <h2 id="extrasTitle">Iframe, Shadow DOM, Media & Events</h2>
+
+        <!-- Iframe -->
+        <div style="margin-bottom:20px;">
+          <h3 style="margin:0 0 12px 0; font-size:18px;">Iframe</h3>
+          <iframe id="demoIframe" title="demo-iframe" style="width:100%; height:180px; border:1px solid var(--gray-300); border-radius:12px;"
+            srcdoc='
+              <div style="font-family:Inter,Arial; padding:16px; background:#f8fafc; border-radius:8px;">
+                <h4 id="insideTitle" style="margin:0 0 12px 0; color:#4361ee;">Iframe Content</h4>
+                <p id="insideP">Click the iframe button below to change this text.</p>
+                <button id="iframeBtn" style="padding:8px 16px; background:#4361ee; color:white; border:none; border-radius:6px; cursor:pointer;">Click inside iframe</button>
+                <script>
+                  document.getElementById("iframeBtn").addEventListener("click", function(){
+                    document.getElementById("insideP").textContent = "Iframe Button Clicked!";
+                    parent.postMessage({type:"iframe-clicked", text:"Iframe notified parent"}, "*");
+                  });
+                </script>
+              </div>
+            ' data-testid="iframe-demo"></iframe>
+          <div class="muted" style="margin-top:12px;">Iframe status: <span id="iframeStatus">idle</span></div>
+        </div>
+
+        <!-- Shadow DOM -->
+        <div style="margin-bottom:20px;">
+          <h3 style="margin:0 0 12px 0; font-size:18px;">Shadow DOM</h3>
+          <div id="shadow-host"></div>
+          <div class="muted" style="margin-top:12px;">(A button and input exist inside shadow root)</div>
+        </div>
+
+        <!-- Events / Tooltip / Double Click / Right Click -->
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+          <div>
+            <div class="hover-target" id="hoverTarget" data-testid="hover-target">Hover me</div>
+            <div id="hoverResult" class="muted" style="margin-top:8px;"></div>
+          </div>
+
+          <div>
+            <div id="dblTarget" class="hover-target" data-testid="dbl-target">Double-click me</div>
+            <div id="dblResult" class="muted" style="margin-top:8px;"></div>
+          </div>
+
+          <div>
+            <div id="rightTarget" class="hover-target" data-testid="right-target">Right-click me</div>
+            <div id="rightResult" class="muted" style="margin-top:8px;"></div>
+          </div>
+
+          <div style="flex:1; min-width:200px;">
+            <label for="contentEditable">Editable Content</label>
+            <div id="contentEditable" contenteditable="true" class="focusable" style="min-height:60px; padding:10px; border:1px dashed var(--gray-300); border-radius:8px; background:white;" data-testid="editable">
+              Edit this text. Try typing something here to test contenteditable elements.
+            </div>
+          </div>
+
+          <div style="flex:1; min-width:200px;">
+            <label for="progressDemo">Progress Element</label>
+            <progress id="progressDemo" value="30" max="100" style="display:block; width:100%;"></progress>
+          </div>
+
+          <div style="flex:1; min-width:200px;">
+            <label for="meterDemo">Meter Element</label>
+            <meter id="meterDemo" min="0" max="10" value="7" style="display:block; width:100%;"></meter>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- Accessible Modal (hidden by default) -->
+<div id="modalBackdrop" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal" role="document">
+    <h3 id="modalTitle">Confirm Action</h3>
+    <p id="modalText" class="muted">Are you sure you want to perform this action?</p>
+    <div class="actions">
+      <button id="modalCancel" class="btn btn-ghost">Cancel</button>
+      <button id="modalConfirm" class="btn btn-danger" data-testid="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Same script content as before -->
+<script>
+/* -------------------------
+   Utility & state
+   ------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+  const table = document.querySelector('#studentTable tbody');
+  const totalCount = document.getElementById('totalCount');
+  const selectAll = document.getElementById('selectAll');
+
+  // update total
+  function refreshCount() {
+    totalCount.textContent = table.querySelectorAll('tr').length;
+  }
+  refreshCount();
+
+  // update rating display
+  const ratingInput = document.getElementById('rating');
+  const ratingValue = document.getElementById('ratingValue');
+  ratingValue.textContent = ratingInput.value;
+  ratingInput.addEventListener('input', () => ratingValue.textContent = ratingInput.value);
+
+  // file preview
+  const photoUpload = document.getElementById('photoUpload');
+  const photoPreview = document.getElementById('photoPreview');
+  photoUpload.addEventListener('change', () => {
+    const f = photoUpload.files[0];
+    photoPreview.textContent = f ? `Selected: ${f.name}` : 'No file chosen';
+  });
+
+  // range / slider example done above
+
+  /* -------------------------
+     Add student (form)
+     ------------------------- */
+  const addForm = document.getElementById('addForm');
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addStudentFromForm();
+  });
+  document.getElementById('addSampleBtn').addEventListener('click', () => addStudent('Auto_'+Date.now(), 'auto@example.com', 'Manual Testing', 3));
+
+  function addStudentFromForm(){
+    const name = document.getElementById('nameInput').value.trim() || 'New';
+    const email = document.getElementById('emailInput').value.trim() || '';
+    const course = document.getElementById('courseInput').value.trim() || 'Playwright';
+    const rating = document.getElementById('rating').value || '3';
+    addStudent(name, email, course, rating);
+    addForm.reset();
+    // keep rating at default for convenience
+    document.getElementById('rating').value = 4;
+    document.getElementById('ratingValue').textContent = 4;
+  }
+
+  let nextId = (() => {
+    const ids = Array.from(table.querySelectorAll('tr')).map(r => Number(r.dataset.id));
+    return Math.max(...ids) + 1;
+  })();
+
+  function addStudent(name, email, course, rating){
+    const id = nextId++;
+    const tr = document.createElement('tr');
+    tr.dataset.id = id;
+    tr.innerHTML = `
+      <td><input class="rowCheck" type="checkbox" data-testid="row-checkbox-${id}"></td>
+      <td class="cell-id">${id}</td>
+      <td class="cell-name" data-testid="name-${id}">${escapeHtml(name)}</td>
+      <td class="cell-email">${escapeHtml(email)}</td>
+      <td class="cell-course">${escapeHtml(course)}</td>
+      <td class="cell-rating">${escapeHtml(String(rating))}</td>
+      <td>
+        <button class="action-btn btn-ghost editBtn" data-testid="edit-${id}">
+          <i>✏️</i> Edit
+        </button>
+        <button class="action-btn btn-danger deleteBtn" data-testid="delete-${id}">
+          <i>🗑️</i> Delete
+        </button>
+      </td>
+    `;
+    table.appendChild(tr);
+    refreshCount();
+  }
+
+  // escape helper to avoid accidental HTML injection
+  function escapeHtml(s) { return s.replaceAll ? s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') : s; }
+
+  /* -------------------------
+     Table actions (delegate)
+     ------------------------- */
+  table.addEventListener('click', (e) => {
+    const edit = e.target.closest('.editBtn');
+    const del = e.target.closest('.deleteBtn');
+    if (edit) handleEdit(edit);
+    if (del) handleDelete(del);
+  });
+
+  function handleEdit(btn){
+    const row = btn.closest('tr');
+    const id = row.dataset.id;
+    const nameCell = row.querySelector('.cell-name').textContent;
+    const emailCell = row.querySelector('.cell-email').textContent;
+    const courseCell = row.querySelector('.cell-course').textContent;
+    // open modal for editing
+    openModal(`Edit student #${id}`, `Edit values for ${nameCell}`, 'edit', { id, nameCell, emailCell, courseCell });
+  }
+
+  function handleDelete(btn){
+    const row = btn.closest('tr');
+    const id = row.dataset.id;
+    openModal(`Delete student #${id}`, `Are you sure you want to delete ${row.querySelector('.cell-name').textContent}?`, 'delete', { id });
+  }
+
+  // select all
+  selectAll.addEventListener('change', () => {
+    table.querySelectorAll('.rowCheck').forEach(cb => cb.checked = selectAll.checked);
+  });
+
+  // bulk delete
+  document.getElementById('bulkDeleteBtn').addEventListener('click', () => {
+    const checked = Array.from(table.querySelectorAll('.rowCheck:checked'));
+    if (!checked.length) { alert('No rows selected'); return; }
+    openModal('Delete selected', `Delete ${checked.length} selected rows?`, 'bulk-delete', { rows: checked.map(cb => cb.closest('tr').dataset.id) });
+  });
+
+  /* -------------------------
+     Export CSV
+     ------------------------- */
+  document.getElementById('exportCSVBtn').addEventListener('click', () => {
+    const rows = Array.from(table.querySelectorAll('tr')).map(r => {
+      return Array.from(r.querySelectorAll('td')).slice(1,6).map(td => `"${td.textContent.replace(/"/g,'""')}"`).join(',');
+    });
+    const header = ['"ID"','"Name"','"Email"','"Course"','"Rating"'].join(',');
+    const csv = [header, ...rows].join('\n');
+    downloadBlob(csv, 'students.csv', 'text/csv;charset=utf-8;');
+  });
+
+  function downloadBlob(content, filename, type){
+    const blob = new Blob([content], { type });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // search filter
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    table.querySelectorAll('tr').forEach(tr => {
+      const nm = tr.querySelector('.cell-name').textContent.toLowerCase();
+      tr.style.display = nm.includes(q) ? '' : 'none';
+    });
+  });
+
+  /* -------------------------
+     Modal logic (accessible)
+     ------------------------- */
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalText = document.getElementById('modalText');
+  const modalConfirm = document.getElementById('modalConfirm');
+  const modalCancel = document.getElementById('modalCancel');
+
+  let modalAction = null;
+  let modalMeta = null;
+
+  function openModal(title, text, action, meta){
+    document.getElementById('modalTitle').textContent = title;
+    modalText.textContent = text;
+    modalAction = action;
+    modalMeta = meta || null;
+    modalBackdrop.classList.remove('hidden');
+    modalConfirm.focus();
+    // trap focus simply by listening escapes
+  }
+
+  modalCancel.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  modalConfirm.addEventListener('click', () => {
+    if (modalAction === 'delete') {
+      const id = modalMeta.id;
+      const row = table.querySelector(`tr[data-id="${id}"]`);
+      if (row) row.remove();
+      closeModal();
+      alert('Student deleted (modal confirm)');
+      refreshCount();
+    } else if (modalAction === 'bulk-delete') {
+      (modalMeta.rows || []).forEach(id => {
+        const r = table.querySelector(`tr[data-id="${id}"]`);
+        if (r) r.remove();
+      });
+      closeModal();
+      alert('Selected rows deleted');
+      refreshCount();
+    } else if (modalAction === 'edit') {
+      // open an inline edit prompt (use simple prompt for brevity)
+      const id = modalMeta.id;
+      const row = table.querySelector(`tr[data-id="${id}"]`);
+      if (!row) return closeModal();
+      const newName = prompt('New name', modalMeta.nameCell) || modalMeta.nameCell;
+      const newEmail = prompt('New email', modalMeta.emailCell) || modalMeta.emailCell;
+      const newCourse = prompt('New course', modalMeta.courseCell) || modalMeta.courseCell;
+      row.querySelector('.cell-name').textContent = newName;
+      row.querySelector('.cell-email').textContent = newEmail;
+      row.querySelector('.cell-course').textContent = newCourse;
+      closeModal();
+      alert('Student updated (modal flow)');
+    } else {
+      closeModal();
+    }
+  });
+
+  function closeModal(){ modalBackdrop.classList.add('hidden'); modalAction = null; modalMeta = null; }
+
+  /* -------------------------
+     Inline native dialogs
+     ------------------------- */
+  document.getElementById('nativeAlert').addEventListener('click', () => alert('Native alert for Playwright dialog handling'));
+  document.getElementById('nativeConfirm').addEventListener('click', () => {
+    if (confirm('Native confirm — accept?')) alert('Accepted'); else alert('Cancelled');
+  });
+
+  /* -------------------------
+     Delegate: delete via native confirm (demonstration)
+     ------------------------- */
+  // Already handled via modal above; but keep another native confirm example:
+  table.addEventListener('dblclick', (e) => {
+    const row = e.target.closest('tr');
+    if (!row) return;
+    // double-click row to remove (native confirm)
+    if (confirm(`Double-click remove ${row.querySelector('.cell-name').textContent}?`)) {
+      row.remove();
+      refreshCount();
+    }
+  });
+
+  /* -------------------------
+     Iframe message & status
+     ------------------------- */
+  const iframe = document.getElementById('demoIframe');
+  window.addEventListener('message', (ev) => {
+    try {
+      if (ev.data && ev.data.type === 'iframe-clicked') {
+        document.getElementById('iframeStatus').textContent = 'iframe clicked -> parent received message';
+      }
+    } catch(e) { /* ignore */ }
+  });
+
+  // For Playwright, you can use frameLocator to click the iframe button which will update text inside iframe
+
+  /* -------------------------
+     Shadow DOM content
+     ------------------------- */
+  const shadowHost = document.getElementById('shadow-host');
+  const root = shadowHost.attachShadow({ mode: 'open' });
+  root.innerHTML = `
+    <style>
+      .s-card{ 
+        background:white; 
+        border-radius:12px; 
+        padding:16px; 
+        font-size:15px; 
+        border:1px solid #e6eef7; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      }
+      .s-btn{ 
+        padding:10px 16px; 
+        border-radius:8px; 
+        border:none; 
+        background: var(--primary); 
+        color:white; 
+        font-weight:600;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .s-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+    </style>
+    <div class="s-card">
+      <div style="margin-bottom:12px; font-weight:600; color:var(--primary);">Shadow DOM Area</div>
+      <input id="shadowInput" placeholder="Type in shadow input..." style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:12px;">
+      <div>
+        <button class="s-btn" id="shadowBtn">Shadow Button</button>
+      </div>
+    </div>
+  `;
+  const shadowBtn = root.getElementById('shadowBtn');
+  shadowBtn.addEventListener('click', () => {
+    // toggle a visual change inside shadow
+    const p = root.querySelector('#shadowInput');
+    p.value = 'Clicked inside shadow';
+  });
+
+  /* -------------------------
+     Hover / double / right click event handlers
+     ------------------------- */
+  const hoverTarget = document.getElementById('hoverTarget');
+  const hoverResult = document.getElementById('hoverResult');
+  hoverTarget.addEventListener('mouseenter', () => hoverResult.textContent = 'Hover event fired');
+
+  const dblTarget = document.getElementById('dblTarget');
+  const dblResult = document.getElementById('dblResult');
+  dblTarget.addEventListener('dblclick', () => dblResult.textContent = 'Double click detected');
+
+  const rightTarget = document.getElementById('rightTarget');
+  const rightResult = document.getElementById('rightResult');
+  rightTarget.addEventListener('contextmenu', (ev) => { ev.preventDefault(); rightResult.textContent = 'Right click/contextmenu detected'; });
+
+  /* -------------------------
+     Drag & drop file area in the left column
+     ------------------------- */
+  const leftCard = document.querySelector('aside.card');
+  const dropArea = document.createElement('div');
+  dropArea.textContent = 'Drag & drop a file here';
+  dropArea.style.padding = '16px';
+  dropArea.style.marginTop = '16px';
+  dropArea.style.border = '2px dashed var(--gray-300)';
+  dropArea.style.borderRadius = '10px';
+  dropArea.style.textAlign = 'center';
+  dropArea.style.color = 'var(--gray-500)';
+  dropArea.style.cursor = 'pointer';
+  dropArea.style.transition = 'var(--transition)';
+  leftCard.appendChild(dropArea);
+
+  dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.style.background = 'var(--gray-100)'; });
+  dropArea.addEventListener('dragleave', e => { e.preventDefault(); dropArea.style.background = ''; });
+  dropArea.addEventListener('drop', e => {
+    e.preventDefault();
+    dropArea.style.background = '';
+    const f = e.dataTransfer.files[0];
+    if (f) photoPreview.textContent = `Dropped: ${f.name}`;
+  });
+
+  /* -------------------------
+     Image download demo
+     ------------------------- */
+  document.getElementById('downloadDemo').addEventListener('click', () => {
+    // create small text file to download
+    downloadBlob('Demo content', 'demo.txt', 'text/plain');
+  });
+
+  /* -------------------------
+     Add sample row (quick test)
+     ------------------------- */
+  document.getElementById('addSampleBtn').addEventListener('click', () => {
+    addStudent(`Guest${Math.floor(Math.random()*1000)}`, `guest${Math.floor(Math.random()*1000)}@example.com`, 'Playwright', 2);
+  });
+
+  /* -------------------------
+     Clear form
+     ------------------------- */
+  document.getElementById('clearForm').addEventListener('click', () => addForm.reset());
+
+  /* -------------------------
+     Tab switching
+     ------------------------- */
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+});
+</script>
+</body>
+</html>

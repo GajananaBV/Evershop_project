@@ -1,0 +1,54 @@
+{
+  "name": "playwright_training",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "cucumber-js": "cucumber-js",
+    "test:bdd": "cucumber-js -r ts-node/register",
+    "clean": "rimraf logs test-results playwright-report allure-report allure-results results node_modules .scannerwork coverage",
+    "clean:install": "rimraf node_modules && npm install",
+    "test": "playwright test",
+    "test:p1": "playwright test --grep \"@p1\" --headed",
+    "test:p1:debug": "playwright test --grep \"@p1\" --headed --debug",
+    "test:sample": "playwright test --grep \"@sample-test\" --headed",
+    "test:smoke": "playwright test --grep \"@smoke\" --headed",
+    "test:smoke:debug": "playwright test --grep \"@smoke\" --headed --debug",
+    "test:smoke:headed": "playwright test --grep \"@smoke\" --headed",
+    "test:smoke:headed:debug": "playwright test --grep \"@smoke\" --headed --debug",
+    "test:regression": "playwright test --grep \"@regression\"",
+    "test:regression:headed": "playwright test --grep \"@regression\" --headed",
+    "test:regression:headed:debug": "$env:LOG_LEVEL=\"debug\"; npm run test:regression:headed --debug",
+    "test:report": "npx playwright show-report",
+    "test:allure report": "npx allure open ./allure-report",
+    "test:report:clean": "rimraf logs test-results playwright-report allure-report allure-results results",
+    "code:lint": "eslint . --ext .ts",
+    "allure:open": "allure open ./allure-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0",
+    "@playwright/test": "^1.54.2",
+    "@types/node": "^24.5.1",
+    "@types/pg": "^8.15.5",
+    "allure-commandline": "^2.34.1",
+    "allure-cucumberjs": "^3.4.1",
+    "allure-js-commons": "^3.4.1",
+    "allure-playwright": "^3.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "pg": "^8.16.3",
+    "playwright": "^1.54.2",
+    "playwright-core": "^1.54.2",
+    "undici-types": "^7.10.0",
+    "xlsx": "^0.18.5"
+  },
+  "description": ""
+}
